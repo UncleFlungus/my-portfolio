@@ -1,0 +1,55 @@
+.enso-breathe {
+  animation: enso-breathe 7.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.enso-sway {
+  animation: enso-sway 16s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.enso-warm {
+  animation: enso-warm 13s ease-in-out infinite;
+}
+.enso-cool {
+  animation: enso-cool 13s ease-in-out infinite;
+}
+
+@keyframes enso-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes enso-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+@keyframes enso-warm {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.22; }
+}
+@keyframes enso-cool {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.82; }
+}
+
+.enso-lens-content {
+  width: 100%;
+  height: 100%;
+}
+.enso-lens-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enso-breathe,
+  .enso-sway,
+  .enso-warm,
+  .enso-cool {
+    animation: none;
+  }
+  .enso-warm { opacity: 0.55; }
+  .enso-cool { opacity: 0.45; }
+}

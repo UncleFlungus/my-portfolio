@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Layered — Wave Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f5f0;
+        --ink: #1a1814;
+        --sub: #5a544b;
+        --sage: #6e8167;
+        --mono: #8a8377;
+        --clay: #c97b54;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        font-family: "General Sans", sans-serif;
+        color: var(--ink);
+        overflow: hidden;
+      }
+      .hero {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        min-height: 600px;
+        overflow: hidden;
+      }
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      /* fade the far mesh into the page at the very top */
+      .topfade {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 32%;
+        background: linear-gradient(var(--bg), transparent);
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* headline */
+      .copy {
+        position: absolute;
+        top: 9%;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .tag {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--mono);
+      }
+      h1 {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: 46px;
+        line-height: 1.05;
+        margin-top: 12px;
+        font-variation-settings:
+          "SOFT" 40,
+          "opsz" 120;
+      }
+      h1 em {
+        font-style: italic;
+        color: var(--sage);
+      }
+
+      /* floating products + labels */
+      .float {
+        position: absolute;
+        z-index: 4;
+        animation: bob 6s ease-in-out infinite;
+      }
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-14px);
+        }
+      }
+      .bottle {
+        filter: drop-shadow(0 12px 22px rgba(80, 60, 30, 0.16));
+      }
+      .lbl {
+        position: absolute;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        line-height: 1.5;
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(4px);
+        border: 1px solid #e4ddcf;
+        padding: 5px 9px;
+        border-radius: 5px;
+        white-space: nowrap;
+        color: var(--ink);
+        box-shadow: 0 4px 14px rgba(80, 60, 30, 0.08);
+      }
+      .lbl b {
+        color: var(--sage);
+      }
+      .lbl .q {
+        color: var(--sub);
+        font-family: "General Sans";
+        font-size: 11px;
+        font-style: italic;
+      }
+      .conn {
+        position: absolute;
+        border-top: 1px dashed var(--sage);
+        opacity: 0.55;
+      }
+      .det {
+        position: absolute;
+        width: 54px;
+        height: 64px;
+      }
+      .det span {
+        position: absolute;
+        width: 11px;
+        height: 11px;
+        border: 2px solid var(--sage);
+      }
+      .det .tl {
+        top: 0;
+        left: 0;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .det .tr {
+        top: 0;
+        right: 0;
+        border-left: 0;
+        border-bottom: 0;
+      }
+      .det .bl {
+        bottom: 0;
+        left: 0;
+        border-right: 0;
+        border-top: 0;
+      }
+      .det .br {
+        bottom: 0;
+        right: 0;
+        border-left: 0;
+        border-top: 0;
+      }
+
+      /* depth tiers */
+      .near {
+        transform-origin: center;
+      }
+      .mid {
+        opacity: 0.78;
+        animation-delay: -2s;
+      }
+      .far {
+        opacity: 0.5;
+        filter: blur(1.2px);
+        animation-delay: -4s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <canvas id="c"></canvas>
+      <div class="topfade"></div>
+
+      <div class="copy">
+        <div class="tag">analysis · for skin like yours</div>
+        <h1>The skin you're in,<br /><em>one layer</em> at a time.</h1>
+      </div>
+
+      <!-- FAR product -->
+      <div class="float far" style="top: 40%; left: 18%">
+        <svg class="bottle" width="46" height="78" viewBox="0 0 46 78">
+          <rect x="15" y="0" width="16" height="11" rx="2" fill="#3a322a" />
+          <rect x="11" y="11" width="24" height="9" rx="2" fill="#5a544b" />
+          <rect x="6" y="20" width="34" height="56" rx="9" fill="#cdd3c2" />
+          <rect
+            x="11"
+            y="42"
+            width="24"
+            height="20"
+            rx="3"
+            fill="#fff"
+            opacity=".55"
+          />
+        </svg>
+        <div class="det" style="top: 4px; left: -4px">
+          <span class="tl"></span><span class="tr"></span
+          ><span class="bl"></span><span class="br"></span>
+        </div>
+        <div class="lbl" style="top: -6px; left: 54px">
+          RANKS <b>#1</b> · combo skin
+        </div>
+      </div>
+
+      <!-- MID product -->
+      <div class="float mid" style="top: 54%; right: 20%">
+        <svg class="bottle" width="58" height="96" viewBox="0 0 46 78">
+          <rect x="15" y="0" width="16" height="11" rx="2" fill="#3a322a" />
+          <rect x="11" y="11" width="24" height="9" rx="2" fill="#5a544b" />
+          <rect x="6" y="20" width="34" height="56" rx="9" fill="#e3cdbf" />
+          <rect
+            x="11"
+            y="42"
+            width="24"
+            height="20"
+            rx="3"
+            fill="#fff"
+            opacity=".55"
+          />
+        </svg>
+        <div class="det" style="top: 18px; left: 0; width: 62px; height: 78px">
+          <span class="tl"></span><span class="tr"></span
+          ><span class="bl"></span><span class="br"></span>
+        </div>
+        <div class="lbl" style="top: 30px; left: 72px">
+          <span class="q">"cleared my dry skin in a week"</span>
+        </div>
+      </div>
+
+      <!-- NEAR product (hero) -->
+      <div class="float near" style="top: 50%; left: 42%">
+        <svg class="bottle" width="78" height="130" viewBox="0 0 46 78">
+          <rect x="15" y="0" width="16" height="11" rx="2" fill="#3a322a" />
+          <rect x="11" y="11" width="24" height="9" rx="2" fill="#5a544b" />
+          <rect x="6" y="20" width="34" height="56" rx="9" fill="#b3c2a4" />
+          <rect
+            x="11"
+            y="42"
+            width="24"
+            height="20"
+            rx="3"
+            fill="#fff"
+            opacity=".6"
+          />
+        </svg>
+        <div
+          class="det"
+          style="top: 24px; left: 2px; width: 84px; height: 104px"
+        >
+          <span class="tl"></span><span class="tr"></span
+          ><span class="bl"></span><span class="br"></span>
+        </div>
+        <div class="lbl" style="top: 22px; left: 96px">
+          ★★★★☆ "Literallyu fixed my skin in a day" · <b>94% match</b
+          ><br />combo / dehydrated
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("c");
+      const ctx = canvas.getContext("2d");
+      let W, H, DPR;
+      function resize() {
+        DPR = Math.min(window.devicePixelRatio || 1, 2);
+        W = canvas.clientWidth;
+        H = canvas.clientHeight;
+        canvas.width = W * DPR;
+        canvas.height = H * DPR;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      const COLS = 52,
+        ROWS = 44;
+      let t = 0;
+      function frame() {
+        ctx.clearRect(0, 0, W, H);
+        const horizon = H * 0.5;
+        const pts = [];
+        for (let r = 0; r <= ROWS; r++) {
+          const td = r / ROWS; // 0 far .. 1 near
+          const persp = Math.pow(td, 1.7); // rows bunch toward horizon
+          const baseY = horizon + (H - horizon) * persp;
+          const spread = 0.22 + td * 2; // wider toward viewer
+          const amp = 6 + td * 18; // taller waves toward viewer
+          const alpha = 0.05 + td * 0.5; // faint far, darker near
+          const row = [];
+          for (let c = 0; c <= COLS; c++) {
+            const nx = c / COLS - 0.5;
+            // two layered sines, scrolling toward viewer via +r and +t
+            const wave =
+              Math.sin(nx * 7 + r * 0.28 + t * 1.4) * 0.6 +
+              Math.sin(nx * 3.3 - r * 0.16 + t * 0.9) * 0.4;
+            const x = W / 2 + nx * W * spread;
+            const y = baseY - wave * amp;
+            row.push({ x, y, alpha });
+          }
+          pts.push(row);
+        }
+        // draw grid
+        ctx.lineWidth = 1;
+        for (let r = 0; r <= ROWS; r++) {
+          for (let c = 0; c <= COLS; c++) {
+            const p = pts[r][c];
+            if (c < COLS) {
+              const q = pts[r][c + 1];
+              ctx.strokeStyle = `rgba(150,143,130,${(p.alpha + q.alpha) / 2})`;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+            }
+            if (r < ROWS) {
+              const q = pts[r + 1][c];
+              ctx.strokeStyle = `rgba(150,143,130,${(p.alpha + q.alpha) / 2})`;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+            }
+          }
+        }
+        t += 0.012;
+        requestAnimationFrame(frame);
+      }
+      frame();
+    </script>
+  </body>
+</html>

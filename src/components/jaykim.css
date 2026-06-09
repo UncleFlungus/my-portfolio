@@ -1,0 +1,16 @@
+.jk {
+  position: relative;
+  display: inline-block;
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  color: #15110c;
+  cursor: default;
+}
+.jk-ly {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}

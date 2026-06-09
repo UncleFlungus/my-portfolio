@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("https://api.fontshare.com/v2/css?f[]=general-sans@400,500&display=swap");
+
+:root {
+  --paper-dawn: #eef0ea;
+  --paper-dusk: #f3e7d8;
+  --tod: 0;
+}
+
+html {
+  background: color-mix(
+    in oklch,
+    var(--paper-dusk) calc(var(--tod) * 100%),
+    var(--paper-dawn)
+  );
+}
+body {
+  margin: 0;
+  font-family: "General Sans", system-ui, sans-serif;
+  color: #352d25;
+}
