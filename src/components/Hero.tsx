@@ -27,14 +27,7 @@ export function Hero() {
   const [quote] = useState(
     () => quotes[Math.floor(Math.random() * quotes.length)],
   );
-  const [worksOpen, setWorksOpen] = useState(false);
 
-  const works = [
-    { label: "art", href: "#art" },
-    { label: "websites", href: "#websites" },
-    { label: "games", href: "#games" },
-    { label: "writings", href: "#writings" },
-  ];
   return (
     <section
       className="relative flex min-h-screen flex-col overflow-hidden"
@@ -128,51 +121,24 @@ export function Hero() {
 
       {/* nav */}
       <nav className="relative z-10 flex items-center justify-between px-7 py-5">
-        <span className="font-[Fraunces] text-lg tracking-wide text-[#3a322a]">
-          ◯ jay kim
-        </span>
-        <div className="flex items-start gap-6 text-[14px] text-[#1c1812]">
-          <div
-            className="relative"
-            onMouseEnter={() => setWorksOpen(true)}
-            onMouseLeave={() => setWorksOpen(false)}
-          >
-            <button
-              className="tracking-[0.01em] transition-[text-shadow] duration-200"
-              style={{
-                textShadow: worksOpen
-                  ? "-1px 0 0 rgba(255,45,110,.5), 1px 0 0 rgba(0,180,235,.5)"
-                  : "none",
-              }}
-            >
-              works <span className="text-[10px] text-[#8a8378]">▾</span>
-            </button>
-            <div
-              className={`absolute right-0 top-full flex flex-col items-end gap-2.5 pt-4 text-[13px] ${
-                worksOpen ? "" : "pointer-events-none"
-              }`}
-            >
-              {works.map((w, i) => (
-                <a
-                  key={w.href}
-                  href={w.href}
-                  className="text-[#6f685c] transition-[opacity,transform] duration-200 ease-out hover:text-[#1c1812]"
-                  style={{
-                    opacity: worksOpen ? 1 : 0,
-                    transform: worksOpen ? "translateY(0)" : "translateY(-8px)",
-                    transitionDelay: `${(worksOpen ? i : works.length - 1 - i) * 40}ms`,
-                  }}
-                >
-                  {w.label}
-                </a>
-              ))}
-            </div>
-          </div>
+        <a
+          href="#"
+          className="font-[Fraunces] text-lg tracking-wide text-[#3a322a]"
+        >
+          ◯
+        </a>
+        <div className="flex items-center gap-6 text-[14px] text-[#1c1812]">
           <a
-            href="#about"
+            href="#work"
             className="tracking-[0.01em] transition-opacity hover:opacity-60"
           >
-            about
+            work
+          </a>
+          <a
+            href="#contact"
+            className="tracking-[0.01em] transition-opacity hover:opacity-60"
+          >
+            contact
           </a>
         </div>
       </nav>
@@ -188,7 +154,7 @@ export function Hero() {
       {/* focal block */}
       <div className="relative z-2 flex flex-1 flex-col items-center justify-center px-5 text-center">
         <p className="mb-7 text-[12.5px] uppercase tracking-[0.13em] text-[#8c8478]">
-          artist · software engineer · ui/ux · motion · graphic design
+          artist · software engineer · ui/ux · Game Dev · graphic design
         </p>
         <JayKim className="text-[68px]" />
         <p className="mt-3.5 text-[13px] tracking-wide text-[#9a9286]">

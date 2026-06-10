@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 export interface Demo {
-  src: string; // path to an HTML file, e.g. "/demos/layered-wave-hero.html"
+  src: string; // .jpg/.png (screenshot), .mp4/.webm (clip), or .html (live demo)
   title: string;
-  poster?: string; // static image shown for cards behind the front one
+  poster?: string; // shown for cards behind the front; for images, same file is fine
 }
 
 const OX = 24; // horizontal offset per card behind
 const OY = 16; // vertical offset per card behind
 const MAX_BEHIND = 3; // how many cards peek behind the front
+
+const isVideo = (s: string) => /\.(mp4|webm|mov)$/i.test(s);
+const isImage = (s: string) => /\.(jpe?g|png|webp|gif|avif)$/i.test(s);
 
 function Card({
   demo,
@@ -28,6 +31,8 @@ function Card({
 }) {
   const [hover, setHover] = useState(false);
   const visible = p <= MAX_BEHIND;
+  const video = isVideo(demo.src);
+  const image = isImage(demo.src);
 
   const x = (p - shift / 2) * OX;
   const y = (p - shift / 2) * OY;
@@ -74,12 +79,30 @@ function Card({
 
         <div className="relative h-[calc(100%-41px)] bg-[#f4ede0]">
           {active ? (
-            <iframe
-              src={demo.src}
-              title={demo.title}
-              loading="lazy"
-              className="h-full w-full border-0"
-            />
+            video ? (
+              <video
+                src={demo.src}
+                poster={demo.poster}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            ) : image ? (
+              <img
+                src={demo.src}
+                alt={demo.title}
+                className="h-full w-full object-contain"
+              />
+            ) : (
+              <iframe
+                src={demo.src}
+                title={demo.title}
+                loading="lazy"
+                className="h-full w-full border-0"
+              />
+            )
           ) : demo.poster ? (
             <img
               src={demo.poster}
@@ -91,19 +114,20 @@ function Card({
           {!active && (
             <div className="absolute inset-0 flex items-end justify-end p-3">
               <span className="rounded-full border border-[#d8cdb5] bg-white/85 px-3 py-1 font-[IBM_Plex_Mono] text-[10px] text-[#6f685c]">
-                click to view
+                view
               </span>
             </div>
           )}
 
-          {active && hover && !reduce && (
+          {/* "interactive" hint only for live (iframe) demos */}
+          {active && hover && !reduce && !video && !image && (
             <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-[#1c1812]/80 px-3 py-1 font-[IBM_Plex_Mono] text-[10px] text-[#f1e9d9]">
               interactive ↗
             </span>
           )}
         </div>
 
-        {/* chromatic edge fringe — on the frame, since we can't reach inside the iframe */}
+        {/* chromatic edge fringe — on the frame, since we can't reach inside the media */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-2xl"
