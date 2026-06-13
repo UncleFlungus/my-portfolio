@@ -134,6 +134,7 @@ export function Hero() {
           >
             work
           </a>
+          <a href="#art" className="tracking-[0.01em] transition-opacity hover:opacity-60">art</a>
           <a
             href="#contact"
             className="tracking-[0.01em] transition-opacity hover:opacity-60"
